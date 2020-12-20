@@ -1,6 +1,7 @@
-from xor.genetic_algorithm import GeneticAlgorithm
-from xor.utils import plot_results
 from numpy.random import seed
+
+from .genetic_algorithm import GeneticAlgorithm
+from .utils import plot_results
 
 # Set random seed (for reproducibility)
 random_seed = 1234
