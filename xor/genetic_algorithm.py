@@ -1,13 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 
-
-class MutationTypeError(Exception):
-    """
-    Mutation type does not exist.
-    """
-    def __init__(self, name):
-        super().__init__(f"'{name}' mutation type does not exist.")
+from . import mutation
 
 
 class RecombinationTypeError(Exception):
@@ -31,7 +25,7 @@ class GeneticAlgorithm:
     Genetic algorithm for TSP.
     """
     def __init__(self, lower_bound=-5, upper_bound=5, alpha=0.5, num_iterations=1000, population_size=100, offspring_size=20, mutation_rate=0.2,
-                 mutation_type="uniform", recombination_type="arithmetic", selection_type="genitor"):
+                 mutation_type=mutation.uniform, recombination_type="arithmetic", selection_type="genitor"):
         """
         Initializes the algorithm.
         """
@@ -171,22 +165,6 @@ class GeneticAlgorithm:
         return (new_individual1, new_individual2)
 
     @staticmethod
-    def mutation_uniform(individual, upper_bound, lower_bound, gene1=None):
-        """
-        Mutates indidividual by using the uniform method.
-
-        Args:
-            individual (np.array): Original individual.
-
-        Returns:
-            mutated_individual (np.array): Individual mutated.
-        """
-        mutated_individual = individual.copy()
-        gene1 = np.random.randint(9)
-        mutated_individual[gene1] = (upper_bound - lower_bound) * np.random.random() + lower_bound
-        return mutated_individual
-
-    @staticmethod
     def selection_genitor(fitness_population):
         """
         Selects population using the genitor method.
@@ -253,12 +231,6 @@ class GeneticAlgorithm:
         # Initialize best_fitness
         best_fitness_all = 0
 
-        # Choose mutation
-        if self.mutation_type == "uniform":
-            mutation = self.mutation_uniform
-        else:
-            raise MutationTypeError(self.mutation_type)
-
         # Choose recombination
         if self.recombination_type == "arithmetic":
             recombination = self.recombination_arithmetic
@@ -273,7 +245,7 @@ class GeneticAlgorithm:
 
         # Iterate through generations
         for iteration in tqdm(range(self.num_iterations), ncols=75):
-            population, fitness = self.generate_next_population(population, mutation, recombination, selection)
+            population, fitness = self.generate_next_population(population, self.mutation_type, recombination, selection)
 
             # Save statistics iteration
             best_fitness_iteration = np.max(fitness)
