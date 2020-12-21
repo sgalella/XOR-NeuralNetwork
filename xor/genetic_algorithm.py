@@ -1,15 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 
-from . import mutation
-
-
-class RecombinationTypeError(Exception):
-    """
-    Recombination type does not exist.
-    """
-    def __init__(self, name):
-        super().__init__(f"'{name}' recombination type does not exist.")
+from . import mutation, recombination
 
 
 class SelectionTypeError(Exception):
@@ -25,7 +17,7 @@ class GeneticAlgorithm:
     Genetic algorithm for TSP.
     """
     def __init__(self, lower_bound=-5, upper_bound=5, alpha=0.5, num_iterations=1000, population_size=100, offspring_size=20, mutation_rate=0.2,
-                 mutation_type=mutation.uniform, recombination_type="arithmetic", selection_type="genitor"):
+                 mutation_type=mutation.uniform, recombination_type=recombination.arithmetic, selection_type="genitor"):
         """
         Initializes the algorithm.
         """
@@ -116,55 +108,6 @@ class GeneticAlgorithm:
         return fitness_population.flatten()
 
     @staticmethod
-    def choose_random_genes(individual):
-        """
-        Selects two separate genes from individual.
-
-        Args:
-            individual (np.array): Genotype of individual.
-
-        Returns:
-            gene1, gene2 (tuple): Genes separated by at least another gene.
-        """
-        gene1, gene2 = np.sort(np.random.choice(len(individual), size=(2, 1), replace=False).flatten())
-        while gene2 - gene1 < 2:
-            gene1, gene2 = np.sort(np.random.choice(len(individual), size=(2, 1), replace=False).flatten())
-        return (gene1, gene2)
-
-    @staticmethod
-    def recombination_arithmetic(individual1, individual2, alpha, gene1=None, gene2=None):
-        """
-        Creates a new individual by recombinating two parents using the
-        Partially Mapped Crossover (PMX) method.
-
-        Args:
-            parent1 (np.array): First parent.
-            parent2 (np.array): Second parent.
-
-        Returns:
-            new_individual1, new_individual2 (tuple): Recombined individuals.
-        """
-        # Copy parents
-        parent1 = individual1.copy()
-        parent2 = individual2.copy()
-
-        # Initialize new individuals
-        new_individual1 = parent1.copy()
-        new_individual2 = parent2.copy()
-
-        # Arithmetic recombination
-        recombination_values = new_individual1 * alpha + new_individual2 * (1 - alpha)
-
-        # Perform the pmx recombination
-        # 1. Select two genes at random and copy segment to new individuals
-        if gene1 is None or gene2 is None:
-            gene1, gene2 = GeneticAlgorithm.choose_random_genes(individual1)
-        new_individual1[gene1:gene2 + 1] = recombination_values[gene1:gene2 + 1]
-        new_individual2[gene1:gene2 + 1] = recombination_values[gene1:gene2 + 1]
-
-        return (new_individual1, new_individual2)
-
-    @staticmethod
     def selection_genitor(fitness_population):
         """
         Selects population using the genitor method.
@@ -231,12 +174,6 @@ class GeneticAlgorithm:
         # Initialize best_fitness
         best_fitness_all = 0
 
-        # Choose recombination
-        if self.recombination_type == "arithmetic":
-            recombination = self.recombination_arithmetic
-        else:
-            raise RecombinationTypeError(self.recombination_type)
-
         # Choose selection
         if self.selection_type == "genitor":
             selection = self.selection_genitor
@@ -245,7 +182,7 @@ class GeneticAlgorithm:
 
         # Iterate through generations
         for iteration in tqdm(range(self.num_iterations), ncols=75):
-            population, fitness = self.generate_next_population(population, self.mutation_type, recombination, selection)
+            population, fitness = self.generate_next_population(population, self.mutation_type, self.recombination_type, selection)
 
             # Save statistics iteration
             best_fitness_iteration = np.max(fitness)
