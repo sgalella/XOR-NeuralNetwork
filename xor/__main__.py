@@ -1,7 +1,7 @@
 from numpy.random import seed
 
 from .genetic_algorithm import GeneticAlgorithm
-from .utils import plot_results
+from .visualization import plot_results
 from . import mutation, recombination, selection
 
 # Set random seed (for reproducibility)
