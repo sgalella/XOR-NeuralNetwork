@@ -2,7 +2,7 @@ from numpy.random import seed
 
 from .genetic_algorithm import GeneticAlgorithm
 from .utils import plot_results
-from . import mutation, recombination
+from . import mutation, recombination, selection
 
 # Set random seed (for reproducibility)
 random_seed = 1234
@@ -18,7 +18,7 @@ offspring_size = 20
 mutation_rate = 0.05
 mutation_type = mutation.uniform
 recombination_type = recombination.arithmetic
-selection_type = "genitor"
+selection_type = selection.genitor
 
 # Initialize genetic algorithm
 ga = GeneticAlgorithm(lower_bound, upper_bound, alpha, num_iterations, population_size, offspring_size, mutation_rate,
