@@ -1,7 +1,8 @@
+import matplotlib.pyplot as plt
 from numpy.random import seed
 
 from .genetic_algorithm import GeneticAlgorithm
-from .visualization import plot_results
+from .visualization import plot_fitness, plot_diversity
 from . import mutation, recombination, selection
 
 # Set random seed (for reproducibility)
@@ -28,5 +29,6 @@ ga = GeneticAlgorithm(lower_bound, upper_bound, alpha, num_iterations, populatio
 solutions, max_fitness, mean_fitness, diversity_genotype, diversity_phenotype = ga.run()
 
 # Print
-plot_results(solutions[0], mean_fitness, max_fitness, diversity_genotype, diversity_phenotype)
-print(f"Final weights: {solutions[0]}")
+plot_fitness(mean_fitness, max_fitness)
+plot_diversity(diversity_genotype, diversity_phenotype)
+plt.show()
