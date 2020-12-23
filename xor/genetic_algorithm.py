@@ -94,7 +94,7 @@ class GeneticAlgorithm:
         for idx, individual in enumerate(population):
             fitness = 0
             for x, output in zip(inputs, outputs):
-                fitness += abs(output - self.forward_pass(x, individual))
+                fitness += (output - self.forward_pass(x, individual)) ** 2
             fitness_population[idx] = np.exp(-fitness)
 
         return fitness_population.flatten()
