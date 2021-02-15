@@ -40,6 +40,6 @@ conda activate xor-nn
 Run the menu with the following command:
 
 ```python
-python -m xor
+python -m xor_nn
 ```
 
