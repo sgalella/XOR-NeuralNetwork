@@ -1,5 +1,5 @@
 # XOR Neural Network
-Genetic algorithm to train a 3-layer neural network for predicting the [binary exclusive OR (XOR) gate](https://en.wikipedia.org/wiki/XOR_gate).
+[Genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm) to train a 3-layer neural network for predicting the [binary exclusive OR (XOR) gate](https://en.wikipedia.org/wiki/XOR_gate).
 
 <p align="center">
     <img width="588" height="275" src="images/xor_network.png">
